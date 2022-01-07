@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>TD1</title>
+</head>
+
+<body>
+    <h1> TD1 </h1>
+
+    <h2>
+    <script>
+        var options = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+        };
+
+        function success(pos) {
+            var crd = pos.coords;
+
+            document.write(crd.latitude)
+            console.log('Votre position actuelle est :');
+            console.log(`Latitude : ${crd.latitude}`);
+            console.log(`Longitude : ${crd.longitude}`);
+            console.log(`La précision est de ${crd.accuracy} mètres.`);
+        }
+
+        function error(err) {
+            console.warn(`ERREUR (${err.code}): ${err.message}`);
+        }
+
+        navigator.geolocation.getCurrentPosition(success, error, options);
+    </script>
+    </h2>
+</body>
+
+</html>
