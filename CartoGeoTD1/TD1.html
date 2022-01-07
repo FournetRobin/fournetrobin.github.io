@@ -25,7 +25,7 @@
             var timestamp = Date.now()
             var date = new Date(timestamp)
 
-
+            var speed = pos.speed
             
 
 
@@ -37,7 +37,7 @@
 
             document.getElementById("lat").innerHTML = `Latitude : ${crd.latitude}`;
             document.getElementById("lon").innerHTML = `Longitude : ${crd.longitude}`;
-            document.getElementById("vit").innerHTML = 'ouga';
+            document.getElementById("vit").innerHTML = `Vitesse : ${speed}`;
             document.getElementById("tim").innerHTML = `Date : ${date}`;
         }
 
