@@ -9,7 +9,7 @@
 <body>
     <h1> TD1 </h1>
 
-    <h2>
+
     <script>
         var options = {
             enableHighAccuracy: true,
@@ -20,11 +20,18 @@
         function success(pos) {
             var crd = pos.coords;
 
-            document.write(crd.latitude)
+            var today = new Date();
+            var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+
             console.log('Votre position actuelle est :');
             console.log(`Latitude : ${crd.latitude}`);
             console.log(`Longitude : ${crd.longitude}`);
             console.log(`La précision est de ${crd.accuracy} mètres.`);
+
+            document.getElementById("lat").innerHTML = `Latitude : ${crd.latitude}`;
+            document.getElementById("lon").innerHTML = `Longitude : ${crd.longitude}`;
+            document.getElementById("vit").innerHTML = 'ouga';
+            document.getElementById("tim").innerHTML = `${date}`;
         }
 
         function error(err) {
@@ -33,7 +40,11 @@
 
         navigator.geolocation.getCurrentPosition(success, error, options);
     </script>
-    </h2>
+
+    <p id="lat"></p>
+    <p id="lon"></p>
+    <p id="vit"></p>
+    <p id="tim"></p>
 </body>
 
 </html>
