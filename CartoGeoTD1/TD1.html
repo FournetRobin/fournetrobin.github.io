@@ -61,17 +61,31 @@
             // Faire quelque chose de génial.
 
 
-            var rotateDegrees = event.rotateDegrees;
-            var leftToRight = event.leftToRight;
-            var frontToBack = event.frontToBack;
-
-            document.getElementById("orx").innerHTML = `Orientation x : ${rotateDegrees}`;
-            document.getElementById("ory").innerHTML = `Orientation y : ${leftToRight}`;
-            document.getElementById("orz").innerHTML = `Orientation z : ${frontToBack}`;
+           
         }
 
         window.addEventListener("devicemotion", handleMotionEvent, true);
 
+
+
+        if (window.DeviceOrientationEvent) {
+            window.addEventListener("deviceorientation", function (event) {
+                // alpha : rotation autour de l'axe z
+                var rotateDegrees = event.alpha;
+                // gamma : de gauche à droite
+                var leftToRight = event.gamma;
+                // bêta : mouvement avant-arrière
+                var frontToBack = event.beta;
+
+                handleOrientationEvent(frontToBack, leftToRight, rotateDegrees);
+            }, true);
+        }
+
+        var handleOrientationEvent = function (frontToBack, leftToRight, rotateDegrees) {
+            document.getElementById("orx").innerHTML = `Orientation x : ${rotateDegrees}`;
+            document.getElementById("ory").innerHTML = `Orientation y : ${leftToRight}`;
+            document.getElementById("orz").innerHTML = `Orientation z : ${frontToBack}`;
+        };
 
     </script>
 
