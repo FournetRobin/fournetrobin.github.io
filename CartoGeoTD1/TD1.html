@@ -75,6 +75,10 @@
                 // bêta : mouvement avant-arrière
                 var frontToBack = event.beta;
 
+                document.getElementById("orx").innerHTML = `Orientation x : ${alpha}`;
+                document.getElementById("ory").innerHTML = `Orientation y : ${gamma}`;
+                document.getElementById("orz").innerHTML = `Orientation z : ${beta}`;
+
                 handleOrientationEvent(frontToBack, leftToRight, rotateDegrees);
             }, true);
         }
@@ -93,6 +97,10 @@
     <p id="acx"></p>
     <p id="acy"></p>
     <p id="acz"></p>
+    <br>
+    <p id="orx"></p>
+    <p id="ory"></p>
+    <p id="orz"></p>
 </body>
 
 </html>
