@@ -61,12 +61,9 @@
             // Faire quelque chose de génial.
 
 
-            // alpha : rotation autour de l'axe z
-            var rotateDegrees = event.alpha;
-            // gamma : de gauche à droite
-            var leftToRight = event.gamma;
-            // bêta : mouvement avant-arrière
-            var frontToBack = event.beta;
+            var rotateDegrees = event.rotateDegrees;
+            var leftToRight = event.leftToRight;
+            var frontToBack = event.frontToBack;
 
             document.getElementById("orx").innerHTML = `Orientation x : ${rotateDegrees}`;
             document.getElementById("ory").innerHTML = `Orientation y : ${leftToRight}`;
