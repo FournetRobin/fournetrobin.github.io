@@ -25,8 +25,8 @@
             var timestamp = Date.now()
             var date = new Date(timestamp)
 
-            var speed = pos.speed
-            
+            var vitesse = pos.speed
+
 
 
 
@@ -37,7 +37,7 @@
 
             document.getElementById("lat").innerHTML = `Latitude : ${crd.latitude}`;
             document.getElementById("lon").innerHTML = `Longitude : ${crd.longitude}`;
-            document.getElementById("vit").innerHTML = `Vitesse : ${speed}`;
+            document.getElementById("vit").innerHTML = `Vitesse : ${vitesse}`;
             document.getElementById("tim").innerHTML = `Date : ${date}`;
         }
 
@@ -45,7 +45,14 @@
             console.warn(`ERREUR (${err.code}): ${err.message}`);
         }
 
+
         navigator.geolocation.getCurrentPosition(success, error, options);
+
+        if (window.DeviceMotionEvent) {
+  window.addEventListener('devicemotion', deviceMotionHandler);
+  setTimeout(stopJump, 3*1000);
+}
+
     </script>
 
     <p id="lat"></p>
