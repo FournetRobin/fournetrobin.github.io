@@ -7,7 +7,7 @@
 </head>
 
 <body>
-    <h1> TD1 </h1>
+    <h4> TD1 </h4>
 
 
     <script>
@@ -29,7 +29,9 @@
 
 
 
-
+            Math.round()
+            Math.round()
+            Math.round()
             console.log('Votre position actuelle est :');
             console.log(`Latitude : ${crd.latitude}`);
             console.log(`Longitude : ${crd.longitude}`);
@@ -61,7 +63,7 @@
             // Faire quelque chose de génial.
 
 
-           
+
         }
 
         window.addEventListener("devicemotion", handleMotionEvent, true);
@@ -87,6 +89,15 @@
             document.getElementById("orz").innerHTML = `Orientation z : ${frontToBack}`;
         };
 
+        function printMousePos(event) {
+            var clicx = event.clientX;
+            var clicy = event.clientY;
+            document.getElementById("posx").innerHTML = `Position x : ${clicx}`;
+            document.getElementById("posy").innerHTML = `Position y : ${clicy}`;
+        }
+
+        document.addEventListener("click", printMousePos);
+
     </script>
 
     <h2 id="lat"></h2>
@@ -101,6 +112,9 @@
     <h2 id="orx"></h2>
     <h2 id="ory"></h2>
     <h2 id="orz"></h2>
+    <br>
+    <h2 id="posx"></h2>
+    <h2 id="posy"></h2>
 </body>
 
 </html>
