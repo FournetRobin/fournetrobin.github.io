@@ -47,13 +47,13 @@
 
             var map = L.map('map').setView([crd.latitude, crd.longitude], 13);
 
-            L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
                 maxZoom: 18,
                 id: 'mapbox/streets-v11',
                 tileSize: 512,
                 zoomOffset: -1,
-                accessToken: 'pk.eyJ1IjoiYm9iaW5vIiwiYSI6ImNreWU0NHc3eDA1Zm4ycHQ2OG55a2NjanMifQ.O8Z72LMFImGs4Sgs0KnxAg'
+                accessToken: 'baba'
             }).addTo(map);
 
             var marker = L.marker([43.6961, 7.27178]).addTo(map);
