@@ -47,11 +47,24 @@
 
             var map = L.map('map').setView([crd.latitude, crd.longitude], 13);
 
-            L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png', {
                 attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
             }).addTo(map);
 
             var marker = L.marker([43.6961, 7.27178]).addTo(map);
+
+            var polygon = L.polygon([
+                [32.2896141, -64.784187],
+                [29.122349, -80.991361],
+                [18.216919, -66.580912]
+            ]).addTo(map);
+
+            var circle = L.circle([crd.latitude, crd.longitude], {
+                color: 'red',
+                fillColor: '#f03',
+                fillOpacity: 0.5,
+                radius: crd.accuracy
+            }).addTo(map);
         }
 
         function error(err) {
