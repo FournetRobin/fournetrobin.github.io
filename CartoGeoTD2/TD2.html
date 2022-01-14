@@ -86,6 +86,11 @@
                 radius: crd.accuracy
             }).addTo(map);
 
+            var ligne = L.polyline([
+                [crd.latitude, crd.longitude],
+                [43.296482, 5.36978],
+            ]).addTo(map);
+
             var distanceMarseille = getDistanceFromLatLonInKm(crd.latitude, crd.longitude, 43.296482, 5.36978)
             console.log(distanceMarseille)
             document.getElementById("DistMar").innerHTML = `Distance par rapport à marseille : ${distanceMarseille} km`;
