@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>TD3</title>
+</head>
+
+<body>
+    <h4> TD3 </h4>
+
+    <script>
+        window.onload = function () {
+            var canvas = document.getElementById('mycanvas');
+            var myimg = document.getElementById('paysage');
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(myimg, 0, 0);
+            ctx.fillStyle = 'orange';
+            ctx.fillRect(200, 450, 100, 100);
+            ctx.fillStyle = 'brown';
+            ctx.fillRect(250, 500, 25, 50);
+            ctx.fillStyle = 'red';
+            ctx.beginPath();
+            ctx.moveTo(250, 400);
+            ctx.lineTo(180, 450);
+            ctx.lineTo(320, 450);
+            ctx.closePath();
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(50, 50, 30, 0, 2 * Math.PI, false);
+            ctx.fillStyle = 'yellow';
+            ctx.fill();
+        }
+    </script>
+
+    <img id="paysage" width="1" height="1" src="./citron.jpg">
+    <canvas id="mycanvas" width="1080" height="720"></canvas>
+
+</body>
+
+</html>
