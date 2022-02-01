@@ -12,40 +12,90 @@
 </head>
 
 <body>
-    <script src="./three.js-master/build/three.min.js"></script>
+    <script src="https://threejs.org/build/three.js"></script>
+    <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://threejs.org//examples/js/loaders/GLTFLoader.js"></script>
     <script>
-        const scene = new THREE.Scene();
+        var options = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+        };
+
+        function success(pos) {
+            var crd = pos.coords;
+
+            var today = new Date();
+            //var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+            var timestamp = Date.now()
+            var date = new Date(timestamp)
+
+            var vitesse = pos.speed
+
+            console.log('Votre position actuelle est :');
+            console.log(`Latitude : ${crd.latitude}`);
+            console.log(`Longitude : ${crd.longitude}`);
+            console.log(`La précision est de ${crd.accuracy} mètres.`);
+
+            const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(2, 0, 5);
 
         const renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+        const texture = new THREE.TextureLoader().load('8081_earthmap4k.jpg');
+
+        const geometry = new THREE.SphereGeometry(3, 32, 32);
+        const material = new THREE.MeshBasicMaterial({ map: texture });
+        const sphere = new THREE.Mesh(geometry, material);
+        sphere.position.set(0, 0, 0);
+        scene.add(sphere);
+
         const light = new THREE.AmbientLight(0x404040); // soft white light
         scene.add(light);
 
-        const texture = new THREE.TextureLoader().load('8081_earthmap4k.jpg')
+        var crd = pos.coords;
 
-        const geometry = new THREE.SphereGeometry(15, 32, 16);
-        var color = new THREE.Color("green")
-        const material = new THREE.MeshBasicMaterial({ map: texture });
-        const sphere = new THREE.Mesh(geometry, material);
-        scene.add(sphere);
-        camera.position.z = 50;
+        const lat = crd.latitude;
+        const long = crd.longitude;
+        function latlon(lat, long) {
+            lat = lat*Math.PI / 180
+            long = -long*Math.PI / 180
+            var X = 3 * Math.cos(lat) * Math.cos(long)
+            var Z = 3 * Math.cos(lat) * Math.sin(long)
+            var Y = 3 * Math.sin(lat)
 
+            const geometryA = new THREE.SphereGeometry(0.05, 32, 32);
+            const textureA = new THREE.TextureLoader().load('fantacoin.jpg');
+            const materialA = new THREE.MeshBasicMaterial({ map: textureA });
+            const orb = new THREE.Mesh(geometryA, materialA);
+            orb.position.set(X, Y, Z);
+            scene.add(orb);
+        }
 
+        latlon(lat, long)
 
-        var render = function () {
-            requestAnimationFrame(render);
-            sphere.rotation.y += 0.05;
+        const animate = function () {
+            requestAnimationFrame(animate);
+
             renderer.render(scene, camera);
-        };
+        }
+
+        animate();
+
+        }
+
+        function error(err) {
+            console.warn(`ERREUR (${err.code}): ${err.message}`);
+        }
+
+        navigator.geolocation.getCurrentPosition(success, error, options);
 
 
-
-
-
-        render();
     </script>
 </body>
 
