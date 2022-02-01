@@ -23,6 +23,15 @@
             maximumAge: 0
         };
 
+        function getRandomColor() {
+            var letters = '0123456789abcdef';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
         function success(pos) {
             var crd = pos.coords;
 
@@ -39,8 +48,8 @@
             console.log(`La précision est de ${crd.accuracy} mètres.`);
 
             const scene = new THREE.Scene();
-            scene.background = new THREE.TextureLoader().load( 'hqdefault-removebg-preview.png' );
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            scene.background = new THREE.TextureLoader().load('photo-1581093581417-60b6c94a7945.jfif');
+            const camera = new THREE.PerspectiveCamera(135, window.innerWidth / window.innerHeight, 0.1, 1000);
             camera.position.set(2, 0, 5);
 
             const renderer = new THREE.WebGLRenderer();
@@ -85,27 +94,25 @@
                 var X = 3 * Math.cos(lat) * Math.cos(long)
                 var Z = 3 * Math.cos(lat) * Math.sin(long)
                 var Y = 3 * Math.sin(lat)
-
                 const geometryA = new THREE.SphereGeometry(0.02, 32, 32);
-                const textureA = new THREE.TextureLoader().load(textu);
-                const materialA = new THREE.MeshBasicMaterial({ map: textureA });
+                const materialA = new THREE.MeshBasicMaterial({ color: textu });
                 const orb = new THREE.Mesh(geometryA, materialA);
                 orb.position.set(X, Y, Z);
                 scene.add(orb);
             }
 
-            
+
             $.ajax({
-                url:'https://restcountries.com/v3.1/all?fields=latlng',
-                type:'GET',
-                dataType:'json',
-                error: function(){
+                url: 'https://restcountries.com/v3.1/all?fields=latlng',
+                type: 'GET',
+                dataType: 'json',
+                error: function () {
                 },
-                success: function(data){
+                success: function (data) {
                     console.log(data.length)
-                    for(var i = 0; i < data.length; i++){
+                    for (var i = 0; i < data.length; i++) {
                         console.log(data[i].latlng[0])
-                        latlontexture(data[i].latlng[0], data[i].latlng[1], 'tang.jpeg')
+                        latlontexture(data[i].latlng[0], data[i].latlng[1], getRandomColor())
                     }
                 }
             });
