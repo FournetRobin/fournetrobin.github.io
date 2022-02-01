@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>My first three.js app</title>
+    <style>
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="./three.js-master/build/three.min.js"></script>
+    <script>
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        const light = new THREE.AmbientLight(0x404040); // soft white light
+        scene.add(light);
+
+        const texture = new THREE.TextureLoader().load('8081_earthmap4k.jpg')
+
+        const geometry = new THREE.SphereGeometry(15, 32, 16);
+        var color = new THREE.Color("green")
+        const material = new THREE.MeshBasicMaterial({ map: texture });
+        const sphere = new THREE.Mesh(geometry, material);
+        scene.add(sphere);
+        camera.position.z = 50;
+
+
+
+        var render = function () {
+            requestAnimationFrame(render);
+            sphere.rotation.y += 0.05;
+            renderer.render(scene, camera);
+        };
+
+
+
+
+
+        render();
+    </script>
+</body>
+
+</html>
