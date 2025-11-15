@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Monster Hunter Wilds – Wiki (API)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    :root {
+      --bg: #050711;
+      --bg-alt: #0b0f21;
+      --bg-alt2: #111731;
+      --border: #222a46;
+      --accent: #5fd0ff;
+      --text: #f5f7ff;
+      --muted: #a3a7c7;
+      --danger: #ff7b7b;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1a2340 0, #050711 55%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      padding: 0.75rem 1.5rem;
+      background: rgba(7, 11, 30, 0.95);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(8px);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.3rem;
+      letter-spacing: 0.04em;
+    }
+    header small {
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+    header .spacer {
+      flex: 1;
+    }
+    header input {
+      padding: 0.35rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      min-width: 180px;
+    }
+    header input::placeholder {
+      color: var(--muted);
+    }
+
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      min-height: 0;
+    }
+    aside {
+      border-right: 1px solid var(--border);
+      background: rgba(5, 8, 22, 0.9);
+      padding: 0.75rem;
+      overflow-y: auto;
+    }
+    #monster-list-status {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+    .monster-list-item {
+      padding: 0.4rem 0.55rem;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+      margin-bottom: 0.25rem;
+      border: 1px solid transparent;
+    }
+    .monster-list-item:hover {
+      background: rgba(34, 42, 70, 0.85);
+      border-color: var(--border);
+    }
+    .monster-list-item.active {
+      background: rgba(41, 104, 255, 0.2);
+      border-color: var(--accent);
+    }
+    .monster-list-name {
+      font-size: 0.9rem;
+    }
+    .monster-list-meta {
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    section#monster-detail {
+      padding: 1.25rem 1.5rem;
+      overflow-y: auto;
+    }
+    #monster-detail h2 {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      font-size: 1.5rem;
+    }
+    #monster-detail h3 {
+      margin-top: 1.2rem;
+      margin-bottom: 0.4rem;
+      font-size: 1rem;
+    }
+    .muted {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .pill {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 0.1rem 0.5rem;
+      font-size: 0.7rem;
+      margin-right: 0.25rem;
+      margin-bottom: 0.25rem;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .pill.kind-large {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.35rem 1rem;
+      font-size: 0.85rem;
+      margin-bottom: 0.75rem;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin-right: 0.25rem;
+      margin-bottom: 0.2rem;
+    }
+    .badge-weak {
+      border-color: #ffb347;
+      color: #ffb347;
+    }
+    .badge-resist {
+      border-color: #7ed3ff;
+      color: #7ed3ff;
+    }
+    .badge-loc {
+      border-color: #96e6a1;
+      color: #96e6a1;
+    }
+    .error {
+      color: var(--danger);
+      font-size: 0.85rem;
+    }
+    .section-card {
+      background: rgba(7, 11, 30, 0.9);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 0.75rem 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+    ul {
+      padding-left: 1.1rem;
+    }
+    ul li {
+      margin-bottom: 0.2rem;
+    }
+
+    footer {
+      padding: 0.4rem 1.5rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      background: rgba(7, 11, 30, 0.95);
+    }
+
+    @media (max-width: 900px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+      aside {
+        max-height: 42vh;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+      section#monster-detail {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>MH Wilds – Wiki</h1>
+      <small>Data from <code>wilds.mhdb.io</code></small>
+    </div>
+    <div class="spacer"></div>
+    <input id="search" type="text" placeholder="Rechercher un monstre…">
+  </header>
+
+  <main>
+    <aside>
+      <div id="monster-list-status">Chargement des monstres…</div>
+      <div id="monster-list"></div>
+    </aside>
+
+    <section id="monster-detail">
+      <p class="muted">
+        Sélectionne un monstre dans la liste à gauche pour voir sa fiche détaillée.<br>
+        Les données viennent de l’API <code>https://wilds.mhdb.io/en/monsters</code>.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    Fan-made wiki. Monster Hunter™ &amp; Monster Hunter Wilds™ are &copy; CAPCOM.
+  </footer>
+
+  <script>
+    const API_URL = "https://wilds.mhdb.io/en/monsters";
+
+    const monsterListEl = document.getElementById("monster-list");
+    const monsterListStatusEl = document.getElementById("monster-list-status");
+    const detailEl = document.getElementById("monster-detail");
+    const searchInput = document.getElementById("search");
+
+    let allMonsters = [];
+    let filteredMonsters = [];
+    let activeId = null;
+
+    async function loadMonsters() {
+      monsterListStatusEl.textContent = "Chargement des monstres…";
+
+      try {
+        const res = await fetch(API_URL);
+        if (!res.ok) {
+          throw new Error("HTTP " + res.status);
+        }
+        const data = await res.json();
+        allMonsters = data || [];
+        filteredMonsters = allMonsters;
+        monsterListStatusEl.textContent = `${allMonsters.length} monstres chargés`;
+        renderMonsterList(filteredMonsters);
+      } catch (err) {
+        console.error(err);
+        monsterListStatusEl.innerHTML =
+          "<span class='error'>Erreur lors du chargement de l’API.</span>";
+      }
+    }
+
+    function renderMonsterList(monsters) {
+      monsterListEl.innerHTML = "";
+      if (!monsters.length) {
+        monsterListEl.innerHTML =
+          "<p class='muted'>Aucun monstre ne correspond à la recherche.</p>";
+        return;
+      }
+
+      monsters.forEach((m) => {
+        const div = document.createElement("div");
+        div.className = "monster-list-item";
+        if (m.id === activeId) {
+          div.classList.add("active");
+        }
+
+        const name = document.createElement("div");
+        name.className = "monster-list-name";
+        name.textContent = m.name || "(nom inconnu)";
+
+        const meta = document.createElement("div");
+        meta.className = "monster-list-meta";
+        const kind = m.kind || "?";
+        const species = m.species || "?";
+        const loc = (m.locations && m.locations[0] && m.locations[0].name) || "?";
+        meta.textContent = `${kind} · ${species} · ${loc}`;
+
+        div.appendChild(name);
+        div.appendChild(meta);
+
+        div.addEventListener("click", () => {
+          activeId = m.id;
+          renderMonsterList(filteredMonsters);
+          showMonsterDetail(m);
+        });
+
+        monsterListEl.appendChild(div);
+      });
+    }
+
+    function showMonsterDetail(monster) {
+      detailEl.innerHTML = "";
+
+      const title = document.createElement("h2");
+      title.textContent = monster.name || "(nom inconnu)";
+
+      const subtitle = document.createElement("div");
+      subtitle.className = "muted";
+      subtitle.textContent = monster.description || "Pas de description fournie par l’API.";
+
+      const pills = document.createElement("div");
+      const kindPill = document.createElement("span");
+      kindPill.className = "pill " + (monster.kind === "large" ? "kind-large" : "");
+      kindPill.textContent = monster.kind || "kind ?";
+      const speciesPill = document.createElement("span");
+      speciesPill.className = "pill";
+      speciesPill.textContent = monster.species || "species ?";
+
+      pills.appendChild(kindPill);
+      pills.appendChild(speciesPill);
+
+      const metaGrid = document.createElement("div");
+      metaGrid.className = "meta-grid";
+
+      const locNames = (monster.locations || []).map((l) => l.name).join(", ") || "Inconnu";
+      const size = monster.size || {};
+      metaGrid.innerHTML = `
+        <div><strong>Localisations :</strong> ${locNames}</div>
+        <div><strong>Taille (base) :</strong> ${size.base ? size.base.toFixed(1) : "?"}</div>
+        <div><strong>Taille mini :</strong> ${size.mini ? size.mini.toFixed(1) : "?"}</div>
+        <div><strong>Taille or :</strong> ${size.gold ? size.gold.toFixed(1) : "?"}</div>
+      `;
+
+      // Faiblesses
+      const weaknessSection = document.createElement("div");
+      weaknessSection.className = "section-card";
+      const weaknessTitle = document.createElement("h3");
+      weaknessTitle.textContent = "Faiblesses";
+      weaknessSection.appendChild(weaknessTitle);
+
+      if (monster.weaknesses && monster.weaknesses.length) {
+        monster.weaknesses.forEach((w) => {
+          const badge = document.createElement("span");
+          badge.className = "badge badge-weak";
+          let label = w.element || w.kind || "inconnu";
+          if (w.level) {
+            label += ` (lvl ${w.level})`;
+          }
+          if (w.condition) {
+            label += ` – ${w.condition}`;
+          }
+          badge.textContent = label;
+          weaknessSection.appendChild(badge);
+        });
+      } else {
+        const p = document.createElement("p");
+        p.className = "muted";
+        p.textContent = "Pas de données de faiblesse dans l’API pour ce monstre.";
+        weaknessSection.appendChild(p);
+      }
+
+      // Résistances
+      const resistSection = document.createElement("div");
+      resistSection.className = "section-card";
+      const resistTitle = document.createElement("h3");
+      resistTitle.textContent = "Résistances";
+      resistSection.appendChild(resistTitle);
+
+      if (monster.resistances && monster.resistances.length) {
+        monster.resistances.forEach((r) => {
+          const badge = document.createElement("span");
+          badge.className = "badge badge-resist";
+          let label = r.element || r.kind || "inconnu";
+          if (r.condition) {
+            label += ` – ${r.condition}`;
+          }
+          badge.textContent = label;
+          resistSection.appendChild(badge);
+        });
+      } else {
+        const p = document.createElement("p");
+        p.className = "muted";
+        p.textContent = "Pas de données de résistance dans l’API pour ce monstre.";
+        resistSection.appendChild(p);
+      }
+
+      // Localisations
+      const locSection = document.createElement("div");
+      locSection.className = "section-card";
+      const locTitle = document.createElement("h3");
+      locTitle.textContent = "Zones & camps";
+      locSection.appendChild(locTitle);
+
+      if (monster.locations && monster.locations.length) {
+        monster.locations.forEach((loc) => {
+          const span = document.createElement("span");
+          span.className = "badge badge-loc";
+          span.textContent = `${loc.name} (zones: ${loc.zoneCount ?? "?"})`;
+          locSection.appendChild(span);
+        });
+      } else {
+        const p = document.createElement("p");
+        p.className = "muted";
+        p.textContent = "Pas de données de localisation détaillée.";
+        locSection.appendChild(p);
+      }
+
+      // Récompenses (loot)
+      const rewardsSection = document.createElement("div");
+      rewardsSection.className = "section-card";
+      const rewardsTitle = document.createElement("h3");
+      rewardsTitle.textContent = "Récompenses possibles";
+      rewardsSection.appendChild(rewardsTitle);
+
+      if (monster.rewards && monster.rewards.length) {
+        const ul = document.createElement("ul");
+        monster.rewards.slice(0, 10).forEach((reward) => {
+          const li = document.createElement("li");
+          const itemName = reward.item && reward.item.name ? reward.item.name : "Objet inconnu";
+          const chance = reward.chance != null ? `${reward.chance}%` : "?";
+          const qty = reward.quantity != null ? reward.quantity : "?";
+          const kind = reward.kind || "reward";
+          li.textContent = `${itemName} – ${qty}x – ${chance} (${kind})`;
+          ul.appendChild(li);
+        });
+        rewardsSection.appendChild(ul);
+        if (monster.rewards.length > 10) {
+          const more = document.createElement("p");
+          more.className = "muted";
+          more.textContent = `… et ${monster.rewards.length - 10} autres entrées.`;
+          rewardsSection.appendChild(more);
+        }
+      } else {
+        const p = document.createElement("p");
+        p.className = "muted";
+        p.textContent = "Pas de données de loot disponibles pour ce monstre.";
+        rewardsSection.appendChild(p);
+      }
+
+      detailEl.appendChild(title);
+      detailEl.appendChild(subtitle);
+      detailEl.appendChild(pills);
+      detailEl.appendChild(metaGrid);
+      detailEl.appendChild(weaknessSection);
+      detailEl.appendChild(resistSection);
+      detailEl.appendChild(locSection);
+      detailEl.appendChild(rewardsSection);
+    }
+
+    // Recherche
+    searchInput.addEventListener("input", () => {
+      const q = searchInput.value.toLowerCase();
+      filteredMonsters = allMonsters.filter((m) => {
+        const name = (m.name || "").toLowerCase();
+        const species = (m.species || "").toLowerCase();
+        return name.includes(q) || species.includes(q);
+      });
+      activeId = null;
+      renderMonsterList(filteredMonsters);
+      detailEl.innerHTML =
+        "<p class='muted'>Sélectionne un monstre dans la liste pour voir sa fiche détaillée.</p>";
+      if (q && filteredMonsters.length) {
+        monsterListStatusEl.textContent = `${filteredMonsters.length} résultat(s) pour "${q}"`;
+      } else if (q) {
+        monsterListStatusEl.textContent = `Aucun résultat pour "${q}"`;
+      } else {
+        monsterListStatusEl.textContent = `${allMonsters.length} monstres chargés`;
+      }
+    });
+
+    // Start
+    loadMonsters();
+  </script>
+</body>
+</html>
